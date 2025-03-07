@@ -1,0 +1,36 @@
+import itertools
+import string
+
+# Encrypted message (Example)
+cipher_text = "grmv ozmtvi"
+
+
+# All letters in the English alphabet
+alphabet = string.ascii_lowercase
+
+# Function to apply a given key mapping to decrypt text
+def decrypt(text, key_mapping):
+    decrypted_text = ""
+    for char in text:
+        if char in key_mapping:
+            decrypted_text += key_mapping[char]  # Replace with mapped letter
+        else:
+            decrypted_text += char  # Keep spaces or punctuation unchanged
+    return decrypted_text
+
+# Generate all possible key permutations (warning: very slow for large texts)
+possible_keys = itertools.permutations(alphabet)
+
+# Try each permutation as a key
+for key in possible_keys:
+    # Create a dictionary mapping encrypted letters to possible plaintext letters
+    key_mapping = dict(zip(alphabet, key))
+    
+    # Attempt decryption
+    decrypted_text = decrypt(cipher_text, key_mapping)
+    
+    # Print possible decryption
+    print(decrypted_text)
+
+    # Uncomment below to stop early (useful for debugging)
+    # input("Press Enter to see the next decryption...")

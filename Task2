@@ -1,0 +1,65 @@
+import collections
+
+# English letter frequency (approximate order from most to least frequent)
+english_freq_order = "ETAOINSHRDLCUMWFGYPBVKJXQZ"
+
+# Function to perform frequency analysis on the encrypted text
+def frequency_analysis(ciphertext):
+    ciphertext = ciphertext.upper()
+    
+    # Count occurrences of each letter
+    letter_counts = collections.Counter([char for char in ciphertext if char.isalpha()])
+    
+    # Sort letters by frequency (most to least common in the ciphertext)
+    sorted_letters = [letter for letter, count in letter_counts.most_common()]
+    
+    return sorted_letters
+
+# Function to create a decryption mapping based on frequency analysis
+def create_substitution_map(cipher_letters):
+    # Create a mapping from encrypted letters to English frequency order
+    substitution_map = {}
+    
+    for i, letter in enumerate(cipher_letters):
+        if i < len(english_freq_order):  # Map only if within range
+            substitution_map[letter] = english_freq_order[i]
+        else:
+            substitution_map[letter] = letter  # Keep the letter if out of range
+    
+    return substitution_map
+
+# Function to decrypt using the frequency-based mapping
+def decrypt_text(ciphertext, substitution_map):
+    decrypted_text = ""
+    
+    for char in ciphertext.upper():
+        if char in substitution_map:
+            decrypted_text += substitution_map[char]  # Replace with guessed letter
+        else:
+            decrypted_text += char  # Keep spaces and punctuation unchanged
+    
+    return decrypted_text
+
+# Main function
+def main():
+    # Get input from user
+    cipher_text = input("Enter the encrypted text: ")
+    
+    # Step 1: Perform frequency analysis
+    cipher_letter_order = frequency_analysis(cipher_text)
+    
+    # Step 2: Create a substitution mapping
+    substitution_map = create_substitution_map(cipher_letter_order)
+    
+    # Step 3: Decrypt the text
+    decrypted_text = decrypt_text(cipher_text, substitution_map)
+    
+    # Output results
+    print("\n--- Frequency Analysis Results ---")
+    print("Cipher Letters Ordered by Frequency: ", "".join(cipher_letter_order))
+    print("Guessed Decryption Mapping:", substitution_map)
+    print("\n--- Most Likely Decryption ---")
+    print(decrypted_text)
+
+# Run the program
+main()
